@@ -1,3 +1,10 @@
+# Custom file to ignore
+/data
+/notebooks
+
+# Environment file
+.env
+
 # Python-generated files
 __pycache__/
 *.py[oc]
