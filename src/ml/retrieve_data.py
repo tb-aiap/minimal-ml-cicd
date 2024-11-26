@@ -7,6 +7,8 @@ from typing import Any
 import dotenv
 import requests
 
+from . import data_model
+
 dotenv.load_dotenv()
 
 logger = logging.getLogger(__name__)
@@ -21,20 +23,20 @@ if API_URL is None:
 
 
 def get_single_response(api_url: str):
-    """Get a single api call response"""
+    """Get a single api call response."""
     response = requests.get(api_url)
 
     return response
 
 
 def get_multiple_offset_response(entry_number: int = 500) -> list[dict[str, Any]]:
-
+    """To call multiple api calls using offset."""
     response = get_single_response(API_URL)
 
     resp = response.json()
     resp = resp["result"]
 
-    hdb_results = resp["records"]
+    hdb_results = [data_model.HDBData(**r) for r in resp["records"]]
     total_records = resp["total"] if entry_number == 0 else entry_number
     offset_records = resp.get("offset", 0)
 
@@ -50,6 +52,6 @@ def get_multiple_offset_response(entry_number: int = 500) -> list[dict[str, Any]
         resp = resp["result"]
         offset_records = resp.get("offset")
 
-        hdb_results.extend(resp["records"])
+        hdb_results.extend([data_model.HDBData(**r) for r in resp["records"]])
 
     return hdb_results
