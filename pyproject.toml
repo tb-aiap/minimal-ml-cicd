@@ -20,6 +20,7 @@ eda = [
 
 [tool.uv]
 dev-dependencies = [
+    "pre-commit>=4.0.1",
     "pytest>=8.3.3",
     "ruff>=0.7.2",
 ]
