@@ -12,3 +12,6 @@ repos:
     rev: v0.8.0
     hooks:
       - id: ruff
+        args:
+          - --extend-select=D,N
+          - --ignore=D203,D212,D204,D213,D215,D400,D401,D404,D406,D407,D408,D409,D413
