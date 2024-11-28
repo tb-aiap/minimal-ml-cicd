@@ -24,7 +24,13 @@ jobs:
       - name: Ruff linting check
         run: uv run ruff check src
 
-  
+      - name: Print various stuff
+        run: |
+          echo pwd
+          ls
+          ls /
+
+
   # lint:
   #   runs-on: ubuntu-latest
   #   strategy:
