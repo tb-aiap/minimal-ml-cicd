@@ -26,9 +26,11 @@ jobs:
 
       - name: Print various stuff
         run: |
-          echo pwd
-          ls
-          ls /
+          pwd
+          echo showing ls
+          ls -lha
+          echo showing ls root
+          ls -lha /
 
 
   # lint:
