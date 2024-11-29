@@ -52,6 +52,8 @@ def get_multiple_offset_response(entry_number: int = 500) -> list[dict[str, Any]
         resp = resp["result"]
         offset_records = resp.get("offset")
 
-        hdb_results.extend([data_model.HDBData(**r) for r in resp["records"]])
+        hdb_results.extend(
+            [data_model.HDBData(**r).model_dump() for r in resp["records"]]
+        )
 
     return hdb_results
