@@ -10,7 +10,9 @@ def describe_general_data(
     data: pd.DataFrame,
     missing_value: int = 5,
 ) -> None:
-    """Prints some generic information about the dataframe
+    """
+    Prints some generic information about the dataframe.
+
     Shape of Dataframe
     Sum of Duplicated Rows (for all attributes)
     Sum of unique dtypes
@@ -63,8 +65,10 @@ def show_value_count_and_percentage(
     top_5=5,
     as_df=False,
 ):
+    """
+    Produce a dataframe of value counts with count and percentage.
+
     # Reference from Example 3, https://www.statology.org/pandas-value_counts-percentage/
-    """Produce a dataframe of value counts with count and percentage
 
     Args:
         data (pd.Dataframe): Dataframe of the data
@@ -76,7 +80,6 @@ def show_value_count_and_percentage(
     Returns:
         Print output if False, dataframe if True
     """
-
     counts = data[label].value_counts(dropna=drop_na)
     percent = (
         data[label].value_counts(normalize=True, dropna=drop_na).multiply(100).round(2)
@@ -96,7 +99,8 @@ def plot_cat_distribution(
     dropna: bool = False,
     rot: int = 0,
 ) -> mpl.axes._axes.Axes:
-    """Plot categorical bar chart using Pandas dataframe and Matplotlib.
+    """
+    Plot categorical bar chart using Pandas dataframe and Matplotlib.
 
     Args:
         data (pd.DataFrame): DataFrame of the data
@@ -109,7 +113,6 @@ def plot_cat_distribution(
     Returns:
         mpl.axes._axes.Axes: _description_
     """
-
     plot_data = data[label].value_counts(dropna=dropna).sort_values(ascending=True)
     column_list = data[label].unique()
 
@@ -149,6 +152,7 @@ def plot_single_numeric_hist(
 ) -> mpl.axes._axes.Axes:
     """
     Plot histogram using pandas dataframe and matplotlib library.
+
     Test different bin size for different histogram results
 
     Args:
@@ -156,6 +160,7 @@ def plot_single_numeric_hist(
         label (str): attribute in string that you wish to plot
         bins (int, optional): Bins to appear in dataframe. Defaults to 30.
         figsize (tuple[int], optional): Defaults to (4, 3).
+        **kwargs: For additional keywords into pd.DataFrame.hist(**kwargs)
 
     Returns:
         mpl.axes._axes.Axes: return as an axes for customization if needed
@@ -175,8 +180,10 @@ def eda_for_single_numeric(
     edit_plot: bool = False,
     top_5: int = 5,
 ) -> mpl.axes._axes.Axes:
-    """A wrapper for a relevant EDA information, related to numeric attribute,
-    either use it on single attribute or wrap it in a manual loop for all numeric attribute
+    """A wrapper for a relevant EDA information.
+
+    Related to numeric attribute either use it on single attribute
+    or wrap it in a manual loop for all numeric attribute.
 
     Args:
         data (pd.DataFrame): DataFrame of the data
@@ -215,9 +222,10 @@ def eda_for_single_category_str(
     top_5: int = 5,
 ) -> mpl.axes._axes.Axes:
     """
-    A wrapper for a relevant EDA information, related to string/object dtype attribute,
-    either use it on single attribute or wrap it in a manual loop
-    for all string/object dtype attribute
+    A wrapper for a relevant EDA information.
+
+    Related to string/object dtype attribute, either use it on single attribute
+    or wrap it in a manual loop for all string/object dtype attribute
 
     Args:
         data (pd.DataFrame): DataFrame of the data
@@ -245,12 +253,12 @@ def eda_for_single_category_str(
 
 
 def eda_all_numeric_attribute(data):
-    """Wrapper to loop through all numeric attribute"""
+    """Wrapper to loop through all numeric attribute."""
     for col in data.select_dtypes(include=np.number):
         eda_for_single_numeric(data=data, label=col)
 
 
 def eda_all_category_attribute(data):
-    """Wrapper to loop through all category attribute"""
+    """Wrapper to loop through all category attribute."""
     for col in data.select_dtypes(include="object"):
         eda_for_single_category_str(data=data, label=col)
