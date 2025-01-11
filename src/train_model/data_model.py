@@ -1,6 +1,24 @@
 """Data models to define expected datatypes for each model phase."""
 
+from enum import Enum
+
 from pydantic import BaseModel
+
+
+class ColumnEnum(str, Enum):
+    """Setting enums for column names."""
+
+    # initial columns
+    month = "month"
+    town = "town"
+    resale_price = "resale_price"
+    flat_model = "flat_model"
+    lease_commence_date = "lease_commence_date"
+    storey_range = "storey_range"
+
+    # cleaned column
+    storey_from = "storey_from"
+    storey_to = "storey_to"
 
 
 class HDBData(BaseModel):
