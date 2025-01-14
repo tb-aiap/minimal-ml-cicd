@@ -24,16 +24,17 @@ jobs:
       - name: Ruff linting check
         run: uv run ruff check src
 
-      - name: Print various stuff
-        run: |
-          pwd
-          echo showing ls
-          ls -lha
-          echo showing ls root
-          ls -lha /
-          echo showing tmp file
-          ls -lha /tmp
-
+      - name: Test code
+        run: uv run pytest -vs
+      # - name: Print various stuff
+      #   run: |
+      #     pwd
+      #     echo showing ls
+      #     ls -lha
+      #     echo showing ls root
+      #     ls -lha /
+      #     echo showing tmp file
+      #     ls -lha /tmp
 
   # lint:
   #   runs-on: ubuntu-latest
