@@ -16,10 +16,10 @@ logger = logging.getLogger(__name__)
 BASE_URL = os.getenv("BASE_URL")
 API_URL = os.getenv("API_URL")
 
-if API_URL is None:
-    error_msg = "API_URL is None, check environment variable"
-    logger.error(error_msg)
-    raise ValueError(error_msg)
+# if API_URL is None:
+#     error_msg = "API_URL is None, check environment variable"
+#     logger.error(error_msg)
+#     raise ValueError(error_msg)
 
 
 def get_single_response(api_url: str):
@@ -52,8 +52,6 @@ def get_multiple_offset_response(entry_number: int = 500) -> list[dict[str, Any]
         resp = resp["result"]
         offset_records = resp.get("offset")
 
-        hdb_results.extend(
-            [data_model.HDBData(**r).model_dump() for r in resp["records"]]
-        )
+        hdb_results.extend([data_model.HDBData(**r) for r in resp["records"]])
 
     return hdb_results
