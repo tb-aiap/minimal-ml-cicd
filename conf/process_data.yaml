@@ -1,0 +1,14 @@
+
+
+defaults:
+  - override hydra/job_logging: colorlog
+  - override hydra/hydra_logging: colorlog
+  # - override hydra/sweeper: optuna
+  # - override hydra/sweeper/sampler: tpe
+  - _self_
+
+data_folder: "./data"
+raw_file: "raw_hdb.csv"
+cleaned_file: "clean_hdb.csv"
+
+api_entry_call: 500
