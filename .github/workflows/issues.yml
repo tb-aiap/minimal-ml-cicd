@@ -1,0 +1,16 @@
+name: uv check and test code
+
+on:
+  issues:
+    type: [ "opened" ]
+  workflow_dispatch:
+
+jobs:
+  event-test:
+    name: print git events
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: dump github context
+        run: echo '${{ toJSON(github.event) }}'
+        
