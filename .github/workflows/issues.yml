@@ -2,7 +2,8 @@ name: uv check and test code
 
 on:
   issues:
-    type: [ "opened" ]
+    types:
+      - opened
   workflow_dispatch:
 
 jobs:
