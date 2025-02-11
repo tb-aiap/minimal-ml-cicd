@@ -5,11 +5,15 @@ from abc import ABC, abstractmethod
 
 import omegaconf
 import pandas as pd
+from sklearn.preprocessing import OneHotEncoder, StandardScaler
 
 from . import data_model
 
 logger = logging.getLogger(__name__)
 COL = data_model.ColumnEnum
+
+
+PREPROCESSOR = {"standardscaler": StandardScaler, "onehotencoder": OneHotEncoder}
 
 
 class DataPreprocessor(ABC):
@@ -32,11 +36,28 @@ class HdbDataPreprocessor(DataPreprocessor):
     def __init__(self, params: omegaconf.DictConfig):
         """Initialize data preprocessor."""
         self.params = params
+        self._validate_params()
+
+    def _validate_params(self):
+        """Check the following in params.
+
+        If preprocessors are typed correctly in config file.
+        """
+        for key in self.params:
+            if PREPROCESSOR.get(key) is None:
+                (self.params)
+                raise NotImplementedError(
+                    f"{key} is either not implemented or check spelling."
+                )
 
     def preprocess_data(self, data: pd.DataFrame) -> pd.DataFrame:
         """Placeholder for preprocessing / scaling ."""
-        # one hot encode columns
-        return data
+        for key in self.params:
+            preprocessor = PREPROCESSOR.get(key)()
+            preprocess_data = data[self.params[key]["columns"]]
+            scaled_data = preprocessor.fit_transform(preprocess_data)
+
+        return scaled_data
 
     def feature_engineer(self, data: pd.DataFrame) -> pd.DataFrame:
         """Main function to feature engineer data."""
@@ -51,12 +72,14 @@ class HdbDataPreprocessor(DataPreprocessor):
 
     def _fe_ratio_storey_to_floor_area(self, data: pd.DataFrame) -> pd.DataFrame:
         """Feature Engineer ratio of floor storey and sq area."""
-        data[COL.storey_area_ratio] = data[COL.floor_area_sqm] / data[COL.storey_to]
+        data[COL.storey_area_ratio.name] = (
+            data[COL.floor_area_sqm] / data[COL.storey_to]
+        )
 
         return data
 
     def _fe_lease_less_than_50_yrs(self, data: pd.DataFrame) -> pd.DataFrame:
         """Feature Engineer for boolean lease if it is less than 50 years remaining."""
-        data[COL.lease_less_than_50_yrs] = data[COL.remaining_lease] < 50
+        data[COL.lease_less_than_50_yrs.name] = data[COL.remaining_lease] < 50
 
         return data
