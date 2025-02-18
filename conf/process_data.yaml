@@ -12,3 +12,15 @@ raw_file: "raw_hdb.csv"
 cleaned_file: "clean_hdb.csv"
 
 api_entry_call: 500
+
+preprocess:
+  # options for columns include.. ["all_numeric", "all_non_numeric"]
+  standard_scaler:
+    columns:
+      - storey_area_ratio
+      - remaining_lease
+      - floor_area_sqm
+  onehotencoder:
+    columns:
+      - flat_model
+      - lease_less_than_50_yrs

@@ -1,7 +1,8 @@
 # Custom file to ignore
 /data
 /notebooks
-
+/outputs
+*.log
 # Environment file
 .env
 

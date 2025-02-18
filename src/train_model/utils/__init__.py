@@ -1,7 +1,8 @@
 """Init file for utils module."""
 
-from . import eda
+from . import eda, utils
 
 __all__ = [
     "eda",
+    "utils",
 ]
