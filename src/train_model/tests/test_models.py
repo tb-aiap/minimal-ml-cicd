@@ -1,5 +1,7 @@
 """Test modules related to models module."""
 
+import pathlib
+
 import omegaconf
 import pandas as pd
 import pytest
@@ -76,9 +78,36 @@ def test_sklearn_predictor(
 ):
     """Test sklearn predictor method allows different type of model and respective params."""
     config = request.getfixturevalue(config)
-    sklearn_model = tm.models.sklearn.SKLearnPredictor(config.model, model=model)
+    sklearn_model = tm.models.SKLearnPredictor(config.model, model=model)
 
     sklearn_model.fit(train_data[["floor_area_sqm"]], train_data["remaining_lease"])
     ypred = sklearn_model.predict(test_data[["floor_area_sqm"]])
 
     assert len(ypred) == test_data.shape[0]
+
+
+@pytest.mark.parametrize(
+    "model,config",
+    [
+        pytest.param(
+            LinearRegression,
+            "linear_regression_config",
+            id="linear_regression",
+        ),
+        pytest.param(
+            RandomForestRegressor,
+            "randomforest_regressor_config",
+            id="randomforestregressor",
+        ),
+    ],
+)
+def test_sklearn_predictor_save_func(config, model, tmp_path, request):
+    """Test sklearn predictor save method."""
+    config = request.getfixturevalue(config)
+    directory_list = pathlib.Path(tmp_path).iterdir()
+    assert list(directory_list) == []
+    sk_predictor = tm.models.SKLearnPredictor(config.model, model=model)
+    sk_predictor.save(tmp_path)
+
+    directory_list = (str(i.stem) for i in pathlib.Path(tmp_path).iterdir())
+    assert sk_predictor.model.__class__.__name__.lower() in list(directory_list)

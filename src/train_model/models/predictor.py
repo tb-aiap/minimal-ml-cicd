@@ -2,9 +2,13 @@
 
 import logging
 from abc import ABC, abstractmethod
+from pathlib import Path
 
 import numpy as np
 import omegaconf
+import sklearn
+
+from ..utils import utils
 
 logger = logging.getLogger(__name__)
 
@@ -22,11 +26,23 @@ class Predictor(ABC):
         """Abstract method to predict with the model."""
         ...
 
+    @abstractmethod
+    def save(self, save_path: str | Path) -> None:
+        """Method to save the model as an object."""
+        ...
+
 
 class SKLearnPredictor(Predictor):
-    """SKLearn related models Predictor implemented here."""
+    """SKLearn related models Predictor implemented here.
 
-    def __init__(self, params: omegaconf.DictConfig, model):
+    Takes in SKLearn's estimator as the Predictor.
+    """
+
+    def __init__(
+        self,
+        params: omegaconf.DictConfig,
+        model: sklearn.base.BaseEstimator,
+    ):
         """Initialize to ingest yaml config params."""
         self.params = params
         self.model_obj = model
@@ -46,3 +62,14 @@ class SKLearnPredictor(Predictor):
         """SKLearn's predict method."""
         ypred = self.model.predict(x)
         return ypred
+
+    def save(self, save_path: str | Path) -> None:
+        """Saving the model object as pickle file."""
+        if isinstance(save_path, str):
+            save_path = Path(save_path)
+
+        model_name = self.model.__class__.__name__.lower()
+        logger.debug(f"Saving model {model_name} into {save_path} folder.")
+
+        m_file_path = Path(save_path, model_name)
+        utils.save_object(self.model, m_file_path)
