@@ -66,6 +66,10 @@ class HdbDataPreprocessor(DataPreprocessor):
         Save the preprocessor after fit_transform.
         Load the preprocess for transform.
         """
+        if self._preprocessors:
+            logger.info("Resetting preprocessors data to fit.")
+            self._preprocessors = []
+
         for key in self.params:
             preprocessor = PREPROCESSOR.get(key)()
             preprocess_data = data[self.params[key]["columns"]]
