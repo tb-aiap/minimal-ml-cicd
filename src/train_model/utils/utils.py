@@ -1,8 +1,12 @@
 """Other utilities function."""
 
+import importlib
+import logging
 import pickle
 from pathlib import Path
 from typing import Any
+
+logger = logging.getLogger(__name__)
 
 
 def save_object(target_object: Any, file_path: str | Path) -> None:
@@ -26,3 +30,29 @@ def load_object(file_path: str | Path) -> Any:
         f = pickle.load(picklefile)
 
     return f
+
+
+def load_func(dotpath: str):
+    """Load function in module. Function name is right-most segment.
+
+    Requires full library name.
+
+    Example:
+    A string value torch.nn.MSELoss
+    module_ = torch.nn
+    func_result = getattr(module, MSELoss)
+
+    A string value numpy.sum / Does not work with np.sum
+    module_ = numpy
+    func_result = getattr(module, sum):q
+    """
+    module_, func = dotpath.rsplit(".", maxsplit=1)
+
+    try:
+        m = importlib.import_module(module_)
+        func_result = getattr(m, func)
+    except (AttributeError, ModuleNotFoundError) as e:
+        logger.error("Check spelling in config '{}' Error - {}".format(dotpath, e))
+        raise
+    logger.debug("load_func returns result = {}".format(func_result))
+    return func_result
