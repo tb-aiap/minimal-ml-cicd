@@ -32,7 +32,7 @@ preprocess:
   # params defines the hyperparameters for tuning or setting
 
 model:
-  predictor_path: train_model.models.sklearn.SKLearnPredictor
+  predictor_path: train_model.models.SKLearnPredictor
   model_object: sklearn.linear_model.LinearRegression
   params:
    fit_intercept: true
