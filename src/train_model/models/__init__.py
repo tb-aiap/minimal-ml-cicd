@@ -1,5 +1,8 @@
 """Init file for models module."""
 
-from . import sklearn
+from .predictor import Predictor, SKLearnPredictor
 
-__all__ = ["sklearn"]
+__all__ = [
+    "Predictor",
+    "SKLearnPredictor",
+]
