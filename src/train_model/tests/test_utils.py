@@ -38,3 +38,16 @@ def test_utils_save_and_load_object_wrong_extension(config):
 
     with pytest.raises(TypeError):
         tm.utils.utils.load_object(object_path)
+
+
+def test_utils_load_function():
+    """Test utility function that loads a module from string input."""
+    import datetime
+
+    dotpath = "datetime.datetime"
+    assert type(tm.utils.utils.load_func(dotpath)) is type(datetime.datetime)
+
+    import random
+
+    dotpath = "random.random"
+    assert type(tm.utils.utils.load_func(dotpath)) is type(random.random)

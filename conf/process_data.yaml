@@ -8,6 +8,7 @@ defaults:
   - _self_
 
 data_folder: "./data"
+model_folder: "./model"
 raw_file: "raw_hdb.csv"
 cleaned_file: "clean_hdb.csv"
 
@@ -15,12 +16,23 @@ api_entry_call: 500
 
 preprocess:
   # options for columns include.. ["all_numeric", "all_non_numeric"]
-  standard_scaler:
+  standardscaler:
     columns:
       - storey_area_ratio
       - remaining_lease
       - floor_area_sqm
   onehotencoder:
     columns:
-      - flat_model
+      # - flat_model
       - lease_less_than_50_yrs
+
+# Model config structure
+# predictor_path defines predictor class to use
+  # model_object defines actual model class to use
+  # params defines the hyperparameters for tuning or setting
+
+model:
+  predictor_path: train_model.models.SKLearnPredictor
+  model_object: sklearn.linear_model.LinearRegression
+  params:
+   fit_intercept: true
