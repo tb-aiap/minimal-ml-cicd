@@ -26,11 +26,14 @@ def main(args):
     # retrieve data, validate data with pydantic
     # TODO: to make this a potential abstract class for various dataset
     logger.info("Retrieving data")
-    hdb_data = tm.retrieve_data.get_multiple_offset_response(args.api_entry_call)
+    if not cleaned_data_path.is_file():
+        hdb_data = tm.retrieve_data.get_multiple_offset_response(args.api_entry_call)
 
-    logger.info(f"Saving data to {raw_data_path}")
-    data = pd.DataFrame([d.model_dump() for d in hdb_data])
-    data.to_csv(raw_data_path, index=False)
+        logger.info(f"Saving data to {raw_data_path}")
+        data = pd.DataFrame([d.model_dump() for d in hdb_data])
+        data.to_csv(raw_data_path, index=False)
+    else:
+        data = pd.read_csv(raw_data_path)
 
     logger.info("Processing / Cleaning data")
     cleaner = tm.data_cleaner.HdbDataCleaner()
