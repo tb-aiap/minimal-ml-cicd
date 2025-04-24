@@ -56,3 +56,50 @@ def load_func(dotpath: str):
         raise
     logger.debug("load_func returns result = {}".format(func_result))
     return func_result
+
+
+def get_output_folder(root_path: str | Path) -> Path:
+    """Get date folder - time folder for saving artifacts.
+
+    Args:
+        root_path (str | Path): The path to create date folder = time folder
+
+    Raises:
+        FileExistsError: If the same time folder exists, it errors out
+
+    Returns:
+        Path: The full folder path for ./yyyy-mm-dd/hh-mm-ss-msms
+    """
+    if isinstance(root_path, str):
+        root_path = Path(root_path)
+
+    import datetime
+
+    date_obj = datetime.datetime.now()
+
+    year = date_obj.year
+    month = date_obj.month
+    day = f"{date_obj.day:02d}"
+
+    hour = date_obj.hour
+    minute = date_obj.minute
+    second = date_obj.second
+    microsecond = date_obj.microsecond
+
+    day_folder = f"{year}-{month}-{day}"
+    root_day_folder = Path(root_path, day_folder)
+
+    if not root_day_folder.exists():
+        root_day_folder.mkdir(parents=True)
+
+    time_folder = f"{hour}-{minute}-{second}-{microsecond//100:04d}"
+    root_time_folder = Path(root_day_folder, time_folder)
+
+    if root_time_folder.exists():
+        error_msg = f"{root_time_folder} already exists."
+        logger.error(error_msg)
+        raise FileExistsError(error_msg)
+
+    root_time_folder.mkdir(parents=True, exist_ok=True)
+
+    return root_time_folder

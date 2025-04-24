@@ -1,5 +1,6 @@
 """Test module for data preprocessor."""
 
+import datetime
 from pathlib import Path
 
 import omegaconf
@@ -51,3 +52,17 @@ def test_utils_load_function():
 
     dotpath = "random.random"
     assert type(tm.utils.utils.load_func(dotpath)) is type(random.random)
+
+
+def test_get_output_folder(config):
+    """Test utility function that generates an output folder."""
+    root_path = config.save_path
+    now_time = datetime.datetime.now()
+    day = f"{now_time.day:02d}"
+    hour = now_time.hour
+    minute = now_time.minute
+    r = tm.utils.utils.get_output_folder(root_path)
+
+    assert r.parent.name.split("-")[2] == day
+    assert r.name.split("-")[0] == str(hour)
+    assert r.name.split("-")[1] == str(minute)
