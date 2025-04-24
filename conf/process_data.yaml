@@ -3,16 +3,21 @@
 defaults:
   - override hydra/job_logging: colorlog
   - override hydra/hydra_logging: colorlog
-  # - override hydra/sweeper: optuna
+  - override hydra/sweeper: optuna
   # - override hydra/sweeper/sampler: tpe
   - _self_
 
+# FOLDER AND FILE PATH
 data_folder: "./data"
 model_folder: "./model"
 raw_file: "raw_hdb.csv"
 cleaned_file: "clean_hdb.csv"
 
 api_entry_call: 500
+
+# PIPELINE
+
+target: resale_price
 
 preprocess:
   # options for columns include.. ["all_numeric", "all_non_numeric"]
@@ -33,6 +38,27 @@ preprocess:
 
 model:
   predictor_path: train_model.models.SKLearnPredictor
-  model_object: sklearn.linear_model.LinearRegression
+  model_object: sklearn.tree.DecisionTreeRegressor
   params:
-   fit_intercept: true
+   max_depth: null
+   max_features: null
+
+
+evaluate:
+  metrics:
+    - sklearn.metrics.mean_absolute_error
+    - sklearn.metrics.mean_squared_error
+
+hydra:
+  sweeper:
+    sampler:
+      _target_: optuna.samplers.TPESampler
+    direction:
+      - minimize
+    study_name: "test-optuna"
+    storage: null
+    n_trials: 10
+    n_jobs: 1
+    params:
+      model.params.max_depth: range(1, 3)
+      model.params.max_features: range(2, 3)
